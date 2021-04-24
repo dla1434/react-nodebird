@@ -34,8 +34,8 @@ const Signup = () => {
     [password]
   );
 
-  const [term, setTerm] = useState("");
-  const [termError, setTermError] = useState("");
+  const [term, setTerm] = useState(false);
+  const [termError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {
     console.log(e.target.checked);
     setTerm(e.target.checked);
@@ -51,12 +51,13 @@ const Signup = () => {
       return setPasswordError(true);
     }
 
+    console.log("term ===========>" + term);
     if (!term) {
       return setTermError(true);
     }
 
     console.log(id, nickname, password);
-  }, []);
+  }, [password, passwordCheck, term]);
 
   return (
     <AppLayout>
