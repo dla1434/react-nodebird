@@ -1,24 +1,27 @@
 // import React, { useState, useCallback, useMemo } from "react";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+import useInput from "../components/hooks/useInput";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
 
 const LoginForm = ({ setIsLoggedIn }) => {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, onChangeId] = useInput("");
+  // const [id, setId] = useState("");
+  // const onChangeId = useCallback((e) => {
+  //   setId(e.target.value);
+  // }, []);
 
-  const onChangeId = useCallback((e) => {
-    setId(e.target.value);
-  }, []);
-
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value);
-  }, []);
+  const [password, onChangePassword] = useInput("");
+  // const [password, setPassword] = useState("");
+  // const onChangePassword = useCallback((e) => {
+  //   setPassword(e.target.value);
+  // }, []);
 
   const onSubmitForm = useCallback(() => {
     //onFinish에서 e.preventDefault();가 이미 적용되어 있으므로 패스
@@ -64,6 +67,10 @@ const LoginForm = ({ setIsLoggedIn }) => {
       </ButtonWrapper>
     </FormWrapper>
   );
+};
+
+LoginForm.propTypes = {
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
