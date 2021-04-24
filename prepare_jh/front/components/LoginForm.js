@@ -1,8 +1,14 @@
+// import React, { useState, useCallback, useMemo } from "react";
 import React, { useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
+import styled from "styled-components";
 
-const LoginForm = () => {
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+`;
+
+const LoginForm = ({ setIsLoggedIn }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,8 +20,21 @@ const LoginForm = () => {
     setPassword(e.target.value);
   }, []);
 
+  const onSubmitForm = useCallback(() => {
+    //onFinish에서 e.preventDefault();가 이미 적용되어 있으므로 패스
+    // e.preventDefault();
+    console.log(id, password);
+    setIsLoggedIn(true);
+  }, [id, password]);
+
+  // const style = useMemo(() => ({ marginTop: 10 }), []);
+
+  const FormWrapper = styled(Form)`
+    padding: 10px;
+  `;
+
   return (
-    <Form>
+    <FormWrapper onFinish={onSubmitForm}>
       <div>
         <label htmlFor="user-id">아이디</label>
         <br />
@@ -32,15 +51,18 @@ const LoginForm = () => {
           required
         />
       </div>
-      <div>
-        <Button type="primary" htmlType="submit" loading={false}></Button>
+      {/* <ButtonWrapper style={style}> */}
+      <ButtonWrapper>
+        <Button type="primary" htmlType="submit" loading={false}>
+          로그인
+        </Button>
         <Link href="/signup">
           <a>
             <Button>회원가입</Button>
           </a>
         </Link>
-      </div>
-    </Form>
+      </ButtonWrapper>
+    </FormWrapper>
   );
 };
 
