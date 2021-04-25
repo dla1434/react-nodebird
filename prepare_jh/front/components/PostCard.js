@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import { Card, Popover, Button, Avatar } from "antd";
+import { Card, Popover, Button, Avatar, List, Comment } from "antd";
 import {
   RetweetOutlined,
   EllipsisOutlined,
@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import PostImages from "../components/PostImages";
+import CommentForm from "../components/CommentForm";
 
 const PostCard = ({ post }) => {
   // const { me } = useSelector((state) => state.user);
@@ -72,7 +73,25 @@ const PostCard = ({ post }) => {
           description={post.content}
         />
       </Card>
-      {commentForOpened && <div>댓글 부분</div>}
+      {commentForOpened && (
+        <div>
+          <CommentForm post={post} />
+          <List
+            header={`${post.Comments.length}개의 댓글`}
+            itemLayout="horizontal"
+            dataSource={post.Comments}
+            renderItem={(item) => (
+              <li>
+                <Comment
+                  author={item.User.nickname}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  content={item.content}
+                />
+              </li>
+            )}
+          />
+        </div>
+      )}
       {/* <CommentForm />
       <Comments /> */}
     </div>
@@ -87,7 +106,7 @@ PostCard.propTypes = {
     User: PropTypes.object,
     content: PropTypes.string,
     createAt: PropTypes.object,
-    Commnets: PropTypes.arrayOf(PropTypes.object),
+    Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
