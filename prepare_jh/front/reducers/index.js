@@ -1,11 +1,5 @@
 import { HYDRATE } from "next-redux-wrapper";
 
-// const initialState = {
-//   name: "zerocho",
-//   age: 27,
-//   password: "babo",
-// };
-
 const initialState = {
   user: {
     isLoggedIn: false,
@@ -42,24 +36,9 @@ const changeNickanme = (data) => {
 };
 changeNickanme("boogicho");
 
-// const changeNickanme = {
-//   type: "CHANGE_NICKNAME",
-//   data: "boogicho",
-// };
-
-// const changeNickanme = {
-//   type: "CHANGE_NICKNAME",
-//   data: "neue zeal",
-// };
-
 //(이전상태, 액션) => 다음상태를 만든다.
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case "CHANGE_NICKNAME":
-    //   return {
-    //     ...state,
-    //     name: action.data,
-    //   };
     case HYDRATE:
       console.log("HYDRATE", action);
       return {

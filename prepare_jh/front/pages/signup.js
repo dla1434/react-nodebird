@@ -7,22 +7,8 @@ import styled from "styled-components";
 
 const Signup = () => {
   const [id, onChangeId] = useInput("");
-  // const [id, setId] = useState("");
-  // const onChangeId = useCallback((e) => {
-  //   setId(e.target.value);
-  // }, []);
-
   const [nickname, onChangeNickname] = useInput("");
-  // const [nickname, setNickname] = useState("");
-  // const onChangeNickname = useCallback((e) => {
-  //   setNickname(e.target.value);
-  // }, []);
-
   const [password, onChangePassword] = useInput("");
-  // const [password, setPassword] = useState("");
-  // const onChangePassword = useCallback((e) => {
-  //   setPassword(e.target.value);
-  // }, []);
 
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState(false);
