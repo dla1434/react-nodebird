@@ -3,13 +3,11 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { Menu, Input, Row, Col } from "antd";
 
-import UserProfile from "../components/UserProfile";
-import LoginForm from "../components/LoginForm";
-
-import styled from "styled-components";
-
 import { useSelector } from "react-redux";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+
+import UserProfile from "./UserProfile";
+import LoginForm from "./LoginForm";
 
 const Global = createGlobalStyle`
   .ant-row{
@@ -32,7 +30,7 @@ const SearchInput = styled(Input.Search)`
 
 const AppLayout = ({ children }) => {
   // const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
 
   return (
     <>
@@ -59,7 +57,7 @@ const AppLayout = ({ children }) => {
       </Menu>
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
@@ -68,9 +66,9 @@ const AppLayout = ({ children }) => {
           <a
             href="https://www.zerocho.com"
             target="_blank"
-            rel="_noreferrer noopener"
+            rel="noreferrer noopener"
           >
-            Made by a zerocho
+            Made by ZeroCho
           </a>
         </Col>
       </Row>
