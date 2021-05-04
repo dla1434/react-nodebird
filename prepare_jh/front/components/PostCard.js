@@ -8,10 +8,11 @@ import {
   HeartTwoTone,
   MessageOutlined,
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PostImages from "../components/PostImages";
 import CommentForm from "../components/CommentForm";
 import PostCardContent from "../components/PostCardContent";
+import { REMOVE_POST_REQUEST } from "../reducers/post";
 
 const PostCard = ({ post }) => {
   // const { me } = useSelector((state) => state.user);
@@ -19,8 +20,11 @@ const PostCard = ({ post }) => {
   //문법이 추가되서 이렇게 줄일 수 있다.
   // const id = me?.id;
 
+  const dispatch = useDispatch();
+
   //좀 더 줄이려면
   const id = useSelector((state) => state.user.me?.id);
+  const { removePostLoading } = useSelector((state) => state.post);
 
   const [liked, setLiked] = useState(false);
   const [commentForOpened, setCommentForOpened] = useState(false);
@@ -32,6 +36,13 @@ const PostCard = ({ post }) => {
   const onToggleComment = useCallback(() => {
     setCommentForOpened((prev) => !prev);
   }, []);
+
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
+  });
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -56,7 +67,13 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button type="danger">삭제</Button>
+                    <Button
+                      type="danger"
+                      loading={removePostLoading}
+                      onClick={onRemovePost}
+                    >
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <Button>신고</Button>
