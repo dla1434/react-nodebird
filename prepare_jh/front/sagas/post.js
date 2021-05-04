@@ -13,7 +13,7 @@ import {
   REMOVE_POST_FAILURE,
 } from "../reducers/post";
 
-import { ADD_POST_TO_ME } from "../reducers/user";
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
 function addPostAPI(data) {
   return axios.post("/api/post", data);

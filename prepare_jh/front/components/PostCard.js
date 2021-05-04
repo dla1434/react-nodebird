@@ -120,7 +120,8 @@ PostCard.propTypes = {
   // post: PropTypes.object.isRequired,
   //object 안에 모든 값을 정의하고 싶다면
   post: PropTypes.shape({
-    id: PropTypes.number,
+    // id: PropTypes.number,
+    id: PropTypes.string,
     User: PropTypes.object,
     content: PropTypes.string,
     createAt: PropTypes.object,
