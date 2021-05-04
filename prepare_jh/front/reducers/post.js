@@ -37,6 +37,9 @@ export const initialState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
 };
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
@@ -66,6 +69,15 @@ const dummyPost = (data) => ({
   },
   Images: [],
   Comments: [],
+});
+
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: "제로초",
+  },
 });
 
 const reducer = (state = initialState, action) => {
@@ -101,8 +113,24 @@ const reducer = (state = initialState, action) => {
       };
     case ADD_COMMENT_SUCCESS:
       // action.data.content, postId, userId;
+      //mainPosts 안에 객체에서 postId값으로 찾아온 다음 Comment를 가져온다.
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = { ...state.mainPosts[postIndex] };
+
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
+
+      // const post = state.mainPosts[postIndex];
+      // const Comments = [dummyComment(action.data.content), ...post.Comments];
+      // const mainPosts = [...state.mainPosts];
+      // mainPosts[postIndex] = { ...post, Comments };
+
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };
