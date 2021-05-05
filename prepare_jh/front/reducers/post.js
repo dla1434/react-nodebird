@@ -1,5 +1,7 @@
 import shortId from "shortid";
+// import produce from "immer";faker from "faker"
 import produce from "../util/produce";
+import faker from "faker";
 
 export const initialState = {
   mainPosts: [
@@ -58,6 +60,35 @@ export const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
+
+// initialState.mainPosts.concat(
+//concat를 사용할 시 항상 변수에 대입을 해줘야 한다.
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.imageUrl(),
+        },
+      ],
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.name.findName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+    }))
+);
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
