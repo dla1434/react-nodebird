@@ -1,55 +1,15 @@
-import shortId from "shortid";
-// import produce from "immer";faker from "faker"
-import produce from "../util/produce";
-import faker from "faker";
+import shortId from 'shortid';
+// import produce from "immer";
+import faker from 'faker';
+import produce from '../util/produce';
 
 export const initialState = {
-  mainPosts: [
-    {
-      id: 1,
-      User: {
-        id: 1,
-        nickname: "제로초",
-      },
-      content: "첫 번째 게시글 #해시태그 #익스프레스",
-      Images: [
-        {
-          id: shortId.generate(),
-          src:
-            "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
-        },
-        {
-          id: shortId.generate(),
-          src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
-        },
-        {
-          id: shortId.generate(),
-          src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
-        },
-      ],
-      Comments: [
-        {
-          id: shortId.generate(),
-          User: {
-            id: shortId.generate(),
-            nickname: "nere",
-          },
-          content: "우와 개정판이 나왔군요",
-        },
-        {
-          id: shortId.generate(),
-          User: {
-            id: shortId.generate(),
-            nickname: "here",
-          },
-          content: "얼른 사고 싶어요",
-        },
-      ],
-    },
-  ],
-  //이미지가 업로드 될 때의 경로
+  mainPosts: [],
   imagePaths: [],
-  //포스트가 완료되었을 true로 변경
+  hasMorePosts: true,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -61,10 +21,8 @@ export const initialState = {
   addCommentError: null,
 };
 
-// initialState.mainPosts.concat(
-//concat를 사용할 시 항상 변수에 대입을 해줘야 한다.
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(20)
+export const generateDummyPost = (number) =>
+  Array(number)
     .fill()
     .map(() => ({
       id: shortId.generate(),
@@ -75,7 +33,8 @@ initialState.mainPosts = initialState.mainPosts.concat(
       content: faker.lorem.paragraph(),
       Images: [
         {
-          src: faker.image.imageUrl(),
+          // src: faker.image.imageUrl(),
+          src: faker.image.image(),
         },
       ],
       Comments: [
@@ -87,20 +46,27 @@ initialState.mainPosts = initialState.mainPosts.concat(
           content: faker.lorem.sentence(),
         },
       ],
-    }))
-);
+    }));
 
-export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
-export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
-export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+// initialState.mainPosts.concat(
+// concat를 사용할 시 항상 변수에 대입을 해줘야 한다.
+// initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
-export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
-export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
-export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
-export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
-export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
-export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
+export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
+export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
@@ -117,7 +83,7 @@ const dummyPost = (data) => ({
   content: data.content,
   User: {
     id: 1,
-    nickname: "제로초",
+    nickname: '제로초',
   },
   Images: [],
   Comments: [],
@@ -128,22 +94,39 @@ const dummyComment = (data) => ({
   content: data,
   User: {
     id: 1,
-    nickname: "제로초",
+    nickname: '제로초',
   },
 });
 
-//reducer란? 이전 상태를 액션을 통해서 다음 상태로 만드어 내는 함수
+// reducer란? 이전 상태를 액션을 통해서 다음 상태로 만드어 내는 함수
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_POSTS_REQUEST:
+        console.log('LOAD_POSTS_REQUEST');
+        draft.loadPostsLoading = true;
+        draft.loadPostsDone = false;
+        draft.loadPostsError = null;
+        break;
+      case LOAD_POSTS_SUCCESS:
+        console.log('LOAD_POSTS_SUCCESS');
+        draft.loadPostsLoading = false;
+        draft.loadPostsDone = true;
+        draft.mainPosts = action.data.concat(draft.mainPosts);
+        draft.hasMorePosts = draft.mainPosts.length < 50;
+        break;
+      case LOAD_POSTS_FAILURE:
+        draft.loadPostsLoading = false;
+        draft.loadPostsError = action.error;
+        break;
       case ADD_POST_REQUEST:
-        console.log("ADD_POST_REQUEST");
+        console.log('ADD_POST_REQUEST');
         draft.addPostLoading = true;
         draft.addPostDone = false;
         draft.addPostError = null;
         break;
       case ADD_POST_SUCCESS:
-        console.log("ADD_POST_SUCCESS");
+        console.log('ADD_POST_SUCCESS');
         draft.addPostLoading = false;
         draft.addPostDone = true;
         // draft.mainPosts = [dummyPost(action.data), ...state.mainPosts];
@@ -157,13 +140,13 @@ const reducer = (state = initialState, action) =>
         draft.addPostError = action.error;
         break;
       case REMOVE_POST_REQUEST:
-        console.log("REMOVE_POST_REQUEST");
+        console.log('REMOVE_POST_REQUEST');
         draft.removePostLoading = true;
         draft.removePostDone = false;
         draft.removePostError = null;
         break;
       case REMOVE_POST_SUCCESS:
-        console.log("REMOVE_POST_SUCCESS");
+        console.log('REMOVE_POST_SUCCESS');
         draft.removePostLoading = false;
         draft.removePostDone = true;
         // draft.mainPosts = state.mainPosts.filter((v) => v.id !== action.data);

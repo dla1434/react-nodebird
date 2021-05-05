@@ -1,11 +1,11 @@
-import React, { useCallback } from "react";
-import { Form, Input, Button } from "antd";
-import Link from "next/link";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback } from 'react';
+import { Form, Input, Button } from 'antd';
+import Link from 'next/link';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
-import useInput from "../hooks/useInput";
-import { loginRequestAction } from "../reducers/user";
+import useInput from '../hooks/useInput';
+import { loginRequestAction } from '../reducers/user';
 // import { loginAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
@@ -21,8 +21,8 @@ const LoginForm = () => {
 
   const { logInLoading, logInError } = useSelector((state) => state.user);
   // const [id, onChangeId] = useInput("");
-  const [email, onChangeEmail] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
     console.log(email, password);

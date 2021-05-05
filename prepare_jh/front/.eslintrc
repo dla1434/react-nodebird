@@ -12,7 +12,8 @@
     "node": true,
     "es6": true
   },
-  "extends": ["airbnb"],
+  // "extends": ["airbnb"],
+  "extends": ["airbnb", "prettier/react"],
   "plugins": ["import", "react-hooks"],
   "rules": {
     "jsx-a11y/label-has-associated-control": "off",
@@ -25,7 +26,8 @@
     "object-curly-newline": "off",
     "linebreak-style": "off",
     "no-param-reassign": "off",
-    "react/jsx-wrap-multilines": ["error", "never"],
     "quotes": ["off", "single"]
+    // "react/jsx-wrap-multilines": ["error", "never"]
+    // "react/jsx-wrap-multilines": ["error", { arrow: true, return: true, declaration: true }]
   }
 }
