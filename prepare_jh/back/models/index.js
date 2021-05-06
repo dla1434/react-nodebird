@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-import Hashtag from './../../../https/front/pages/hashtag';
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 
@@ -13,7 +12,7 @@ const sequelize = new Sequelize(
 );
 
 db.Comment = require('./comment')(sequelize, Sequelize);
-db.Hashtag = require('./comment')(sequelize, Sequelize);
+db.Hashtag = require('./hashtag')(sequelize, Sequelize);
 db.Image = require('./image')(sequelize, Sequelize);
 db.Post = require('./post')(sequelize, Sequelize);
 db.User = require('./user')(sequelize, Sequelize);
