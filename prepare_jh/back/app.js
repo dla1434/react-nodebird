@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
+const testRouter = require('./routes/test');
 const db = require('./models');
 const app = express();
 
@@ -37,6 +38,7 @@ app.get('/api', (req, res) => {
 
 app.use('/post', postRouter);
 app.use('/user', userRouter);
+app.use('/test', testRouter);
 
 app.listen(3065, () => {
   console.log('서버 실행 중!!');
