@@ -1,4 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
+  import Hashtag from './../../../https/front/pages/hashtag';
   const Post = sequelize.define(
     'Post',
     {
@@ -14,7 +15,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Post.associate = (db) => {};
+  Post.associate = (db) => {
+    db.Post.belongsTo(db.User);
+    db.Post.hasMany(db.Comment);
+    db.Post.hasMany(db.Image);
+    db.Post.belongsToMany(db.Hashtag);
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' });
+    db.Post.blongsTo(db.Post, { as: 'Retweet' });
+  };
 
   return Post;
 };
