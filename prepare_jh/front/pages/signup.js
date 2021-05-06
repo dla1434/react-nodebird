@@ -1,20 +1,36 @@
-import React, { useCallback, useState } from "react";
-import AppLayout from "../components/AppLayout";
-import Head from "next/head";
-import { Form, Input, Checkbox, Button } from "antd";
-import useInput from "../hooks/useInput";
-import styled from "styled-components";
-import { SIGN_UP_REQUEST } from "../reducers/user";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useState, useEffect } from 'react';
+import Router from 'next/router';
+import AppLayout from '../components/AppLayout';
+import Head from 'next/head';
+import { Form, Input, Checkbox, Button } from 'antd';
+import useInput from '../hooks/useInput';
+import styled from 'styled-components';
+import { SIGN_UP_REQUEST } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
-  const [email, onChangeEmail] = useInput("");
-  const [nickname, onChangeNickname] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const { signUpLoading, signUpDone, signUpError } = useSelector(
+    (state) => state.user
+  );
 
-  const [passwordCheck, setPasswordCheck] = useState("");
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
+
+  const [email, onChangeEmail] = useInput('');
+  const [nickname, onChangeNickname] = useInput('');
+  const [password, onChangePassword] = useInput('');
+
+  const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const onChangePasswordCheck = useCallback(
     (e) => {
@@ -41,7 +57,7 @@ const Signup = () => {
       return setPasswordError(true);
     }
 
-    console.log("term ===========>" + term);
+    console.log('term ===========>' + term);
     if (!term) {
       return setTermError(true);
     }
@@ -85,6 +101,7 @@ const Signup = () => {
           <br />
           <Input
             name="user-password"
+            type="password"
             value={password}
             required
             onChange={onChangePassword}
@@ -95,6 +112,7 @@ const Signup = () => {
           <br />
           <Input
             name="user-password-check"
+            type="password"
             value={passwordCheck}
             required
             onChange={onChangePasswordCheck}
