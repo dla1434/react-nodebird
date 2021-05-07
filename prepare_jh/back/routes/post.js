@@ -40,7 +40,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         },
       ],
     });
-    res.status(200).json(post);
+    res.status(200).json(fullPost);
   } catch (error) {
     console.error(error);
     next(error);
