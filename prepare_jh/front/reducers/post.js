@@ -133,7 +133,8 @@ const reducer = (state = initialState, action) =>
         // 배열을 추가도 unshift 같은 메소드를 사용해서 바로 넣어도 된다.
         //즉 이제 ...처리한 모든 부분을 변경할 수 있다.
         //unshift는 배열의 뒤가 아닌 맨 앞에 추가해주는 배열값 추가 메소드이다.
-        draft.mainPosts.unshift(dummyPost(action.data));
+        // draft.mainPosts.unshift(dummyPost(action.data));
+        draft.mainPosts.unshift(action.data);
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
@@ -166,8 +167,10 @@ const reducer = (state = initialState, action) =>
       case ADD_COMMENT_SUCCESS:
         //기존 소스는 먼가 엄청나게 많은 것을 ...를 사용해서 처리했지만..
         //결국 보면 Comments에 하나 추가된거다...immert를 사용하면 두 줄로 끝난다.
-        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Comments.unshift(dummyComment(action.data.content));
+        // const post = draft.mainPosts.find((v) => v.id === action.data.postId);
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        // post.Comments.unshift(dummyComment(action.data.content));
+        post.Comments.unshift(action.data.content);
 
         draft.addCommentLoading = false;
         draft.addCommentDone = true;

@@ -24,8 +24,9 @@ dotenv.config();
 // }));
 app.use(
   cors({
-    origin: '*',
-    credentials: false,
+    // origin: '*',
+    origin: 'http://localhost:3060',
+    credentials: true,
   })
 );
 
@@ -65,6 +66,8 @@ app.get('/api', (req, res) => {
 app.use('/post', postRouter);
 app.use('/user', userRouter);
 app.use('/test', testRouter);
+
+// app.use((err, req, res, next) => {});
 
 app.listen(3065, () => {
   console.log('서버 실행 중!!');
