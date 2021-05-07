@@ -10,9 +10,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector(
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector(
     (state) => state.user
   );
+
+  useEffect(() => {
+    if (me && me.id) {
+      // Router.push('/');
+      //push는 뒤로 가기 시 이전페이지로 돌아가는데
+      //repalce는 이전 페이지가 기록에서 사라지니깐...이게 좀 더 확실할 듯
+      Router.replace('/');
+    }
+  }, [me && me.id]);
 
   useEffect(() => {
     if (signUpDone) {

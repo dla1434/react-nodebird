@@ -80,7 +80,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/logout', (req, res) => {
   req.logout();
-  req.session().destroy();
+  req.session.destroy();
   res.send('ok');
 });
 
