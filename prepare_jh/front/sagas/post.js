@@ -32,11 +32,12 @@ function loadPostsAPI(data) {
 
 function* loadPosts(action) {
   try {
-    //const result = yield call(loadPostsAPI, action.data);
-    delay(1000);
+    // delay(1000);
+    const result = yield call(loadPostsAPI, action.data);
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: generateDummyPost(10),
+      data: result.data,
+      // data: generateDummyPost(10),
     });
   } catch (err) {
     console.log(err);

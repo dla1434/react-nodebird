@@ -28,15 +28,27 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     });
     const fullPost = await Post.findOne({
       where: { id: post.id },
+      limit: 10,
+      order: [
+        ['createdAt', 'DESC'],
+        [Comment, 'createdAt', 'DESC'],
+      ],
       include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
         {
           model: Image,
         },
         {
           model: Comment,
-        },
-        {
-          model: User,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+          ],
         },
       ],
     });
@@ -50,7 +62,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
-      where: { id: req.body.params.postId },
+      where: { id: req.params.postId },
     });
 
     if (!post) {
@@ -59,10 +71,21 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
 
     const comment = await Comment.create({
       content: req.body.content,
-      PostId: req.body.params.postId,
+      PostId: parseInt(req.params.postId, 10),
       UserId: req.user.id,
     });
-    res.status(200).json(comment);
+
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+      ],
+    });
+
+    res.status(200).json(fullComment);
   } catch (error) {
     console.error(error);
     next(error);

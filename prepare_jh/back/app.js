@@ -3,6 +3,7 @@ const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const testRouter = require('./routes/test');
 const db = require('./models');
@@ -11,6 +12,7 @@ const passport = require('passport');
 const passportConfig = require('./passport');
 
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 const app = express();
 passportConfig();
@@ -32,6 +34,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
@@ -64,6 +67,7 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/test', testRouter);
 
