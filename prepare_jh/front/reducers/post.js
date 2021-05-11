@@ -199,7 +199,9 @@ const reducer = (state = initialState, action) =>
         // draft.mainPosts = state.mainPosts.filter((v) => v.id !== action.data);
         //제거할때는 불변성을 처리에서 사용하던 filter가 더 편한다.
         //아니라면 splice를 써야 하는데..인덱스를 찾아서 처리해야 해서 한 줄이 더 늘어나므로 불편하다.
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
+        draft.mainPosts = draft.mainPosts.filter(
+          (v) => v.id !== action.data.PostId
+        );
         break;
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
