@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
+import { REMOVE_IMAGE } from '../reducers/post';
+import { ADD_POST_REQUEST } from '../reducers/post';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -19,9 +21,33 @@ const PostForm = () => {
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost(text));
     // setText("");
-  }, [text]);
+    // dispatch(addPost(text));
+
+    if (!text || !text.trim()) {
+      return alert('게시글을 작성하세요');
+    }
+
+    const formData = new FormData();
+    imagePaths.forEach((p) => {
+      formData.append('image', p);
+    });
+    formData.append('content', text);
+
+    dispatch({
+      type: ADD_POST_REQUEST,
+      data: formData,
+    });
+
+    //image가 없다면 formData 없이 json으로 해도 충분하다.
+    // dispatch({
+    //   type: ADD_POST_REQUEST,
+    //   data: {
+    //     imagePaths,
+    //     content: text,
+    //   },
+    // });
+  }, [text, imagePaths]);
 
   const imageInput = useRef();
 
@@ -43,6 +69,13 @@ const PostForm = () => {
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
   }, [imageInput.current]);
+
+  const onRemoveImage = useCallback((index) => () => {
+    dispatch({
+      type: REMOVE_IMAGE,
+      data: index,
+    });
+  });
 
   return (
     <Form
@@ -76,11 +109,15 @@ const PostForm = () => {
         </Button>
       </div>
       <div>
-        {imagePaths.map((v) => (
+        {imagePaths.map((v, i) => (
           <div key={v} style={{ dispaly: 'inline-block' }}>
-            <img src={v} style={{ width: '200px' }} alt={v} />
+            <img
+              src={`http://localhost:3065/${v}`}
+              style={{ width: '200px' }}
+              alt={v}
+            />
             <div>
-              <button>제거</button>
+              <button onClick={onRemoveImage(i)}>제거</button>
             </div>
           </div>
         ))}

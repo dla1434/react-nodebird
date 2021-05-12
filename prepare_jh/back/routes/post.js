@@ -17,29 +17,48 @@ try {
   fs.mkdirSync('uploads');
 }
 
-router.get('/', isLoggedIn, (req, res) => {
-  res.json([
-    {
-      id: 1,
-      content: 'hello',
+//multer는 이렇게 requestMapping 단위로 한다.
+//이유는 간단한다...요청마다..필요한 곳이 다르니깐
+const upload = multer({
+  //어디다 저장할거냐..여기서는 하드에 저장
+  //실무에는 aws s3 같은 곳에 저장
+  //이유는 aws 인스턴스에 위치하면 스케일링 시 이 파일도 같이 복사가 되니깐...
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');
     },
-    {
-      id: 2,
-      content: 'hello2',
+    filename(req, file, done) {
+      //제로초.png
+      const ext = path.extname(file.originalname); //확장자 추출 (.png)
+      const basename = path.basename(file.originalname, ext); //제로초
+      //같은 파일명으로 다른 사용자의 파일을 덮어쓸 수 있기 때문에 타임스탬프를 붙인다.
+      done(null, basename + '_' + new Date().getTime() + ext); //제로초_15184712891.png
     },
-    {
-      id: 3,
-      content: 'hello3',
-    },
-  ]);
+    limits: { fileSize: 20 * 1024 * 1024 }, //20MB
+  }),
 });
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        //이미지를 여러개 올리면 image: [제로초.png, 부기초.png] 형태로 올라온다.
+        const images = await Promise.all(
+          req.body.image.map((image) => Image.create({ src: image }))
+        );
+        await post.addImages(images);
+      } else {
+        //이미지를 한 개 올리면 image: 제로초.png
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
+
     const fullPost = await Post.findOne({
       where: { id: post.id },
       limit: 10,
@@ -76,27 +95,6 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
-
-//multer는 이렇게 requestMapping 단위로 한다.
-//이유는 간단한다...요청마다..필요한 곳이 다르니깐
-const upload = multer({
-  //어디다 저장할거냐..여기서는 하드에 저장
-  //실무에는 aws s3 같은 곳에 저장
-  //이유는 aws 인스턴스에 위치하면 스케일링 시 이 파일도 같이 복사가 되니깐...
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads');
-    },
-    filename(req, file, done) {
-      //제로초.png
-      const ext = path.extname(file.originalname); //확장자 추출 (.png)
-      const basename = path.basename(file.originalname, ext); //제로초
-      //같은 파일명으로 다른 사용자의 파일을 덮어쓸 수 있기 때문에 타임스탬프를 붙인다.
-      done(null, basename + new Date().getTime() + ext); //제로초15184712891.png
-    },
-    limits: { fileSize: 20 * 1024 * 1024 }, //20MB
-  }),
 });
 
 router.post(

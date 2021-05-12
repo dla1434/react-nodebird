@@ -141,15 +141,18 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/post', { content: data });
+  //formData는 {} 감싸서 보내면 안 되고
+  // return axios.post('/post', { content: data });
+  //다음처럼 그대로 보내야한다.
+  return axios.post('/post', data);
 }
 
 function* addPost(action) {
   try {
     // yield delay(1000);
-    console.log('==============================', action.data);
+    // const id = shortId.generate();
+    console.log('addPost', action.data);
     const result = yield call(addPostAPI, action.data);
-    const id = shortId.generate();
     yield put({
       type: ADD_POST_SUCCESS,
       data: result.data,
