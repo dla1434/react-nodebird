@@ -38,15 +38,17 @@ const Home = () => {
 
       let currentPos = window.scrollY + document.documentElement.clientHeight;
       if (currentPos > document.documentElement.scrollHeight - 300) {
-        console.log(
-          'currentPos',
-          currentPos,
-          'Scroll hasMorePosts',
-          hasMorePosts
-        );
+        // console.log(
+        //   'currentPos',
+        //   currentPos,
+        //   'Scroll hasMorePosts',
+        //   hasMorePosts
+        // );
         if (hasMorePosts && !loadPostsLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
+            lastId: lastId,
           });
         }
       }
