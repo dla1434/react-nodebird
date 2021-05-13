@@ -135,7 +135,7 @@ function* loadPosts(action) {
     console.log(err);
     yield put({
       type: LOAD_POSTS_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -212,7 +212,7 @@ function* addComment(action) {
     console.log(err);
     yield put({
       type: ADD_COMMENT_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
