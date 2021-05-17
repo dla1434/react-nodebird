@@ -17,6 +17,15 @@ const Post = () => {
 
   const { singlePost } = useSelector((state) => state.post);
 
+  // if (router.isFallback && !singlePost) {
+  //   return <div>로딩 중...</div>;
+  // } else {
+  //   console.log(
+  //     '--------------------------------------------------',
+  //     singlePost
+  //   );
+  // }
+
   return (
     <AppLayout>
       <Head>
@@ -46,10 +55,22 @@ const Post = () => {
   );
 };
 
+// export async function getStaticPaths() {
+//   return {
+//     paths: [
+//       { params: { id: '1' } },
+//       { params: { id: '2' } },
+//       { params: { id: '3' } },
+//     ],
+//     fallback: true,
+//   };
+// }
+
+// export const getStaticProps = wrapper.getStaticProps(async (context) => {
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
     console.log('getServerSideProps start');
-    console.log(context.req.headers);
+    // console.log(context.req.headers);
     const cookie = context.req ? context.req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';
     if (context.req && cookie) {
