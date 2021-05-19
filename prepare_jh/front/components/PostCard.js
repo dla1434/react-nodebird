@@ -20,6 +20,9 @@ import {
   RETWEET_REQUEST,
 } from '../reducers/post';
 import Link from 'next/link';
+import moment from 'moment';
+
+moment.locale('ko');
 
 const PostCard = ({ post }) => {
   // const { me } = useSelector((state) => state.user);
@@ -149,6 +152,9 @@ const PostCard = ({ post }) => {
               )
             }
           >
+            <span style={{ float: 'right' }}>
+              {moment(post.createdAt).format('YYYY.MM.DD.')}
+            </span>
             <Card.Meta
               avatar={
                 <Link href={`/user/${post.Retweet.User.id}`}>
@@ -162,17 +168,22 @@ const PostCard = ({ post }) => {
             />
           </Card>
         ) : (
-          <Card.Meta
-            avatar={
-              <Link href={`/user/${post.User.id}`}>
-                <a>
-                  <Avatar>{post.User.nickname[0]}</Avatar>
-                </a>
-              </Link>
-            }
-            title={post.User.nickname}
-            description={<PostCardContent postData={post.content} />}
-          />
+          <>
+            <span style={{ float: 'right' }}>
+              {moment(post.createdAt).format('YYYY.MM.DD.')}
+            </span>
+            <Card.Meta
+              avatar={
+                <Link href={`/user/${post.User.id}`}>
+                  <a>
+                    <Avatar>{post.User.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
+              title={post.User.nickname}
+              description={<PostCardContent postData={post.content} />}
+            />
+          </>
         )}
       </Card>
       {commentForOpened && (
