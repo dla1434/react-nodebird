@@ -1,23 +1,29 @@
-module.exports = (sequelize, DataTypes) => {
-  const Comment = sequelize.define(
-    'Comment',
-    {
-      content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-    },
-    {
-      //이모티콘을 사용하려면 utf8이 아닌 utf8mb4로 지정해야 한다.
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_general_ci',
-    }
-  );
+const DataTypes = require('sequelize');
+const { Model } = DataTypes;
 
-  Comment.associate = (db) => {
+module.exports = class Comment extends Model {
+  static init(sequelize) {
+    return super.init(
+      {
+        // id가 기본적으로 들어있다.
+        content: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        // UserId: 1
+        // PostId: 3
+      },
+      {
+        modelName: 'Comment',
+        tableName: 'comments',
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci', // 이모티콘 저장
+        sequelize,
+      }
+    );
+  }
+  static associate(db) {
     db.Comment.belongsTo(db.User);
     db.Comment.belongsTo(db.Post);
-  };
-
-  return Comment;
+  }
 };
