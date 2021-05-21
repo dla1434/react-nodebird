@@ -10,7 +10,7 @@ import {
   Indicator,
   SlickWrapper,
 } from './styles';
-import { backUrl } from '../config/config';
+import { backUrl } from '../../config/config';
 
 const ImageZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
