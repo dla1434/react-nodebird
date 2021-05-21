@@ -58,6 +58,11 @@ app.use(
     // secret: 'nodebirdsecret',
     //이런 경우를 위해서 dotenv를 설치해서 .env에 변수를 관리하면 좋다.
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      domain: process.env.NODE_ENV === 'production' && '.nodebird.com',
+    },
   })
 );
 app.use(passport.initialize());
