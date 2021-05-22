@@ -8,6 +8,9 @@ const { User, Post, Image, Comment, Hashtag } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
+
 try {
   //해당 폴더가 있는지 검사해서 없으면 에러 발생
   fs.accessSync('uploads');
@@ -17,6 +20,25 @@ try {
   fs.mkdirSync('uploads');
 }
 
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'us-east-1',
+});
+const upload = multer({
+  storage: multerS3({
+    //이러면 aws s3에 대한 권한을 획득한다.
+    s3: new AWS.S3(),
+    bucket: 'react-nodebird-s3',
+    key(req, file, cb) {
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
+/*
+기존 하드디스크에 저정했을때 사용
 //multer는 이렇게 requestMapping 단위로 한다.
 //이유는 간단한다...요청마다..필요한 곳이 다르니깐
 const upload = multer({
@@ -37,6 +59,7 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024 }, //20MB
   }),
 });
+*/
 
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
@@ -167,6 +190,13 @@ router.get('/:postId', async (req, res, next) => {
   }
 });
 
+router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {
+  // POST /post/images
+  console.log(req.files);
+  res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
+});
+
+/*
 router.post(
   '/images',
   isLoggedIn,
@@ -178,6 +208,7 @@ router.post(
     res.status(200).json(req.files.map((v) => v.filename));
   }
 );
+*/
 
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
   // POST /post/1/retweet
