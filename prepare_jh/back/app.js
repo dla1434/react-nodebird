@@ -41,6 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
@@ -58,6 +59,7 @@ app.use(
     // secret: 'nodebirdsecret',
     //이런 경우를 위해서 dotenv를 설치해서 .env에 변수를 관리하면 좋다.
     secret: process.env.COOKIE_SECRET,
+    proxy: true,
     cookie: {
       httpOnly: true,
       secure: false,
